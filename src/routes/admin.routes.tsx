@@ -1,20 +1,9 @@
-import { ReactNode } from "react";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import CreateAdmin from "../pages/admin/CreateAdmin";
 import CreateFaculty from "../pages/admin/CreateFaculty";
 import CreateStudent from "../pages/admin/CreateStudent";
-import { NavLink } from "react-router-dom";
-interface IRoutes {
-  path: string;
-  element: ReactNode;
-}
-interface INavLink {
-  key: string;
-  label: ReactNode;
-  children?: INavLink[];
-}
 
-export const adminNavs = [
+export const adminRoutes = [
   {
     name: "Dashboard",
     path: "dashboard",
@@ -41,68 +30,3 @@ export const adminNavs = [
     ],
   },
 ];
-
-//Hard coded
-// export const adminRoutes = [
-//   {
-//     index: true,
-//     element: <AdminDashboard />,
-//   },
-//   {
-//     path: "create-student",
-//     element: <CreateStudent />,
-//   },
-//   {
-//     path: "create-admin",
-//     element: <CreateAdmin />,
-//   },
-//   {
-//     path: "create-faculty",
-//     element: <CreateFaculty />,
-//   },
-// ];
-
-//Programatically
-
-export const adminRoutes = adminNavs.reduce((acc: IRoutes[], item) => {
-  if (item.path && item.element) {
-    acc.push({
-      path: item.path,
-      element: item.element,
-    });
-  }
-
-  if (item.children) {
-    item.children.forEach((child) => {
-      acc.push({
-        path: child.path,
-        element: child.element,
-      });
-    });
-  }
-
-  return acc;
-}, []);
-
-export const adminSidebarItems = adminNavs.reduce((acc: INavLink[], item) => {
-  if (item.path && item.name) {
-    acc.push({
-      key: item.name,
-      label: <NavLink to={`/admin/${item.path}`}>{item.name}</NavLink>,
-    });
-  }
-
-  if (item.children) {
-    acc.push({
-      key: item.name,
-      label: item.name,
-      children: item.children.map((child) => ({
-        key: child.name,
-        label: <NavLink to={`/admin/${child.path}`}>{child.name}</NavLink>,
-      })),
-    });
-  }
-  return acc;
-}, []);
-
-console.log(adminSidebarItems);
