@@ -28,7 +28,7 @@ const baseQueryWithCustomToken: BaseQueryFn<
   let result = await baseQuery(args, api, extraOption);
 
   if (result?.error?.status === 404) {
-    toast.error("User not found");
+    toast.error(result.error.data.message);
   }
 
   if (result?.error?.data?.message === "jwt expired") {

@@ -14,10 +14,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { academicSemesterSchema } from "../../../schemas/academicManagement";
 import { useCreateAcademicSemesterMutation } from "../../../redux/features/admin/academitManagement";
 import { toast } from "sonner";
+import { IAcademicSemester, IResponse } from "../../../types";
 
 const CreateAcademicSemester = () => {
   const [createAcademicSemester] = useCreateAcademicSemesterMutation();
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const toastId = toast.loading("Creating academic semister");
     const name = nameOptions[Number(data.name) - 1].label;
     const semData = {
       name,
@@ -27,11 +29,15 @@ const CreateAcademicSemester = () => {
       endMonth: data.endMonth,
     };
     try {
-      const res = await createAcademicSemester(semData);
+      const res = (await createAcademicSemester(
+        semData
+      )) as IResponse<IAcademicSemester>;
       console.log(res);
-      // toast.success(res.data.message);
+      if (res.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else toast.success(res.message, { id: toastId });
     } catch (error) {
-      toast.error("Falied to create academic semister");
+      toast.error("Falied to create academic semister", { id: toastId });
       void error;
     }
   };
